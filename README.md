@@ -107,11 +107,15 @@ Use *close([cb])* to disconnect from hpfeeds server
 
 Emitted when the connection is established and a server info message is received.
 
-*callback(server_name)*
+*callback(err, server_name)*
 
 ```javascript
-  hpfeeds.on('connected', name => {
-    console.log('connected to ', name);
+  hpfeeds.on('connected', (err, name) => {
+    if(err) {
+      console.error(err);
+      return;
+    }
+    console.log('connected to', name);
   });
 ```
 

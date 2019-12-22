@@ -135,7 +135,7 @@ class Client extends EventEmitter3 {
       this.brokername = name.toString();
       this.ready = true;
 
-      this.emit('connected', name.toString());
+      this.emit('connected', null, name.toString());
 
       this.socket.write(msgauth(nonce, this.ident, this.secret));
     }
