@@ -101,6 +101,45 @@ Use *close([cb])* to disconnect from hpfeeds server
   });
 ```
 
+## Events
+
+### 'connected'
+
+Emitted when the connection is established and a server info message is received.
+
+*callback(server_name)*
+
+```javascript
+  hpfeeds.on('connected', name => {
+    console.log('connected to ', name);
+  });
+```
+
+### 'data'
+
+Emitted when new data is available in one of the subscribed channels.
+
+*callback(channel, data)*
+
+```javascript
+  hpfeeds.on('data', (channel, data) => {
+    console.log('received ', channel, data);
+  });
+```
+
+### 'error'
+
+Emitted when an error occurs (including authentication errors)
+
+*callback(err)*
+
+```javascript
+  hpfeeds.on('error', err => {
+    console.error(err);
+    hpfeeds.close();
+  });
+```
+
 ## License
 
 Licensed under MIT License. Copyright 2019 Coldrift Technologies B.V. All rights reserved.

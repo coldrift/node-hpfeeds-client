@@ -91,7 +91,9 @@ class Client extends EventEmitter3 {
       return cb(new Error('Client.connect is already called'));
     }
 
-    this.connect_cb = cb;
+    if(cb) {
+      this.once('connected', cb);
+    }
 
     this.socket = new Socket();
 
@@ -133,7 +135,7 @@ class Client extends EventEmitter3 {
       this.brokername = name.toString();
       this.ready = true;
 
-      this.connect_cb && this.connect_cb();
+      this.emit('connected', name.toString());
 
       this.socket.write(msgauth(nonce, this.ident, this.secret));
     }
@@ -145,7 +147,7 @@ class Client extends EventEmitter3 {
       const payload = payload.slice(1+1+ilength+clength);
 
       try {
-        this.emit('data', JSON.parse(payload));
+        this.emit('data', channel, JSON.parse(payload));
       }
       catch (err) {
         this.emit('error', err);
