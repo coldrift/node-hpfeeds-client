@@ -78,7 +78,14 @@ class Client extends EventEmitter3 {
   constructor(host, port, ident, secret) {
     super();
     this.host = host;
-    this.port = port;
+
+    try {
+      this.port = parseInt(port, 10);
+    }
+    catch(err) {
+      throw new Error('Hpfeeds port is not a valid number');
+    }
+
     this.ident = ident;
     this.secret = secret;
     this.buf = Buffer.alloc(0)
@@ -164,10 +171,19 @@ class Client extends EventEmitter3 {
   }
 
   subscribe(channel, cb) {
+
+    if(!this.ready) {
+      return cb(new Error('Subscribe cannot be called before OP_INFO is received'));
+    }
+
     this.socket.write(msgsubscribe(this.ident, channel), cb);
   }
 
   publish(channel, payload, cb) {
+
+    if(!this.ready) {
+      return cb(new Error('Subscribe cannot be called before OP_INFO is received'));
+    }
 
     if(typeof(payload) === 'object') {
       payload = JSON.stringify(payload)
