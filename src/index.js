@@ -163,6 +163,7 @@ class Client extends EventEmitter3 {
 
     }
     else if (opcode == OP_ERROR) {
+      this.ready = false;
       this.emit('error', new Error(payload.toString()))
     }
     else {
@@ -173,7 +174,7 @@ class Client extends EventEmitter3 {
   subscribe(channel, cb) {
 
     if(!this.ready) {
-      return cb(new Error('Subscribe cannot be called before OP_INFO is received'));
+      return cb(new Error('Subscribe cannot be called when client is not READY state'));
     }
 
     this.socket.write(msgsubscribe(this.ident, channel), cb);
@@ -182,7 +183,7 @@ class Client extends EventEmitter3 {
   publish(channel, payload, cb) {
 
     if(!this.ready) {
-      return cb(new Error('Subscribe cannot be called before OP_INFO is received'));
+      return cb(new Error('Subscribe cannot be called when client is not READY state'));
     }
 
     if(typeof(payload) === 'object') {
