@@ -106,6 +106,8 @@ class Client extends EventEmitter3 {
 
     this.socket.on('data', data => this.on_data(data))
 
+    this.socket.on('error', err => this.emit(err))
+
     this.socket.connect(this.port, this.host);
   }
 
