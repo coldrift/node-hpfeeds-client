@@ -2,6 +2,8 @@
 
 Native hpfeeds3 client for node.js
 
+hpfeeds is a lightweight authenticated publish-subscribe protocol that supports arbitrary binary payloads.
+
 ## Installation
 
 ```
@@ -57,17 +59,23 @@ the user and the secret to the constructor as arguments:
 
 ### Connecting
 
-To connect call *connect([cb])* with optional callback
+To connect call *connect([cb])* with an optional callback
 
 ```javascript
   const Client = require('node-hpfeeds-client')
 
   const hpfeeds = new Client('testhost.example.com', 10000, 'user', 'secret');
 
-  hpfeeds.connect(() => {
+  hpfeeds.connect(err => {
+    if(err) {
+      console.error('unable to connect', err);
+      return;
+    }
     console.log('connected!');
   });
 ```
+
+The callback is also called when an error occurs while connecting.
 
 ### Subscribing
 
@@ -80,6 +88,8 @@ Use *subscribe(channel, [cb])* to subscribe to a channel with hpfeeds server:
   });
 ```
 
+Once subscribed, the incoming messages can be collected via 'data' event.
+
 ### Publishing
 
 Use *publish(channel, payload, [cb])* to publish data to a channel at hpfeeds server:
@@ -90,6 +100,9 @@ Use *publish(channel, payload, [cb])* to publish data to a channel at hpfeeds se
     console.log('ready to publish more data!');
   });
 ```
+
+*payload* can be a string, a buffer or an object. In the latter case it is automatically
+converted to JSON first.
 
 ### Disconnecting
 
@@ -139,6 +152,19 @@ Emitted when an error occurs (including authentication errors)
 
 ```javascript
   hpfeeds.on('error', err => {
+    console.error(err);
+    hpfeeds.close();
+  });
+```
+
+### 'timeout'
+
+Emitted when the client socket times out because of inactivity
+
+*callback(err)*
+
+```javascript
+  hpfeeds.on('timeout', err => {
     console.error(err);
     hpfeeds.close();
   });

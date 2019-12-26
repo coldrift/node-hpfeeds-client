@@ -100,13 +100,15 @@ class Client extends EventEmitter3 {
 
     if(cb) {
       this.once('connected', cb);
+      this.once('error', cb);
     }
 
     this.socket = new Socket();
 
     this.socket.on('data', data => this.on_data(data))
 
-    this.socket.on('error', err => this.emit(err))
+    this.socket.on('error', err => this.emit('error', err))
+    this.socket.on('timeout', () => this.emit('timeout', new Error('hpfeeds connection timed out')))
 
     this.socket.connect(this.port, this.host);
   }
@@ -176,7 +178,11 @@ class Client extends EventEmitter3 {
   subscribe(channel, cb) {
 
     if(!this.ready) {
-      return cb(new Error('Subscribe cannot be called when client is not READY state'));
+      return cb(new Error('Subscribe cannot be called when the client is not in READY state'));
+    }
+
+    if(!this.socket) {
+      return cb(new Error('Subscribe cannot be called when the client is not connected'));
     }
 
     this.socket.write(msgsubscribe(this.ident, channel), cb);
@@ -185,7 +191,11 @@ class Client extends EventEmitter3 {
   publish(channel, payload, cb) {
 
     if(!this.ready) {
-      return cb(new Error('Subscribe cannot be called when client is not READY state'));
+      return cb(new Error('Subscribe cannot be called when the client is not in READY state'));
+    }
+
+    if(!this.socket) {
+      return cb(new Error('Subscribe cannot be called when the client is not connected'));
     }
 
     if(typeof(payload) === 'object') {
