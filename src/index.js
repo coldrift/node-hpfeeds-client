@@ -191,11 +191,23 @@ class Client extends EventEmitter3 {
   publish(channel, payload, cb) {
 
     if(!this.ready) {
-      return cb(new Error('Subscribe cannot be called when the client is not in READY state'));
+      const err = new Error('Subscribe cannot be called when the client is not in READY state')
+      if(cb) {
+        return cb(err);
+      }
+      else {
+        throw err;
+      }
     }
 
     if(!this.socket) {
-      return cb(new Error('Subscribe cannot be called when the client is not connected'));
+      const err = new Error('Subscribe cannot be called when the client is not connected')
+      if(cb) {
+        return cb(err);
+      }
+      else {
+        throw err
+      }
     }
 
     if(typeof(payload) === 'object') {

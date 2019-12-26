@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "node-hpfeeds-client",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Node.JS Hpfeeds3 client",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "import": "./lib/wrapper.js"
   },
   "scripts": {
-    "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
+    "prepare": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
     "build": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
