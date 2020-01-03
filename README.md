@@ -144,6 +144,30 @@ Emitted when new data is available in one of the subscribed channels.
   });
 ```
 
+### 'end'
+
+Emitted when the remote gracefully closes the connection
+
+*callback()*
+
+```javascript
+  hpfeeds.on('end', () => {
+    console.log('disconnected from htpfeeds broker!');
+  });
+```
+
+### 'close'
+
+Emitted when the hpfeeds socket is closed.
+
+*callback()*
+
+```javascript
+  hpfeeds.on('close', () => {
+    console.log('htpfeeds socket is closed');
+  });
+```
+
 ### 'error'
 
 Emitted when an error occurs (including authentication errors)

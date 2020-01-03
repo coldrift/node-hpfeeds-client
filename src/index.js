@@ -109,6 +109,8 @@ class Client extends EventEmitter3 {
 
     this.socket.on('error', err => this.emit('error', err))
     this.socket.on('timeout', () => this.emit('timeout', new Error('hpfeeds connection timed out')))
+    this.socket.on('end', err => this.emit('end'))
+    this.socket.on('close', err => this.emit('close'))
 
     this.socket.connect(this.port, this.host);
   }
