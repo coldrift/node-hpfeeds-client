@@ -86,6 +86,14 @@ class Client extends EventEmitter3 {
       throw new Error('Hpfeeds port is not a valid number');
     }
 
+    if(typeof(ident) !== 'string') {
+      throw new Error('Hpfeeds username must be a string');
+    }
+
+    if(typeof(secret) !== 'string') {
+      throw new Error('Hpfeeds secret must be a string');
+    }
+
     this.ident = ident;
     this.secret = secret;
     this.buf = Buffer.alloc(0)
@@ -99,7 +107,7 @@ class Client extends EventEmitter3 {
     }
 
     if(cb) {
-      this.once('connected', cb);
+      this.once('connected', name => cb(null, name));
       this.once('error', cb);
     }
 
@@ -148,7 +156,7 @@ class Client extends EventEmitter3 {
       this.brokername = name.toString();
       this.ready = true;
 
-      this.emit('connected', null, name.toString());
+      this.emit('connected', name.toString());
 
       this.socket.write(msgauth(nonce, this.ident, this.secret));
     }
